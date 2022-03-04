@@ -1,0 +1,109 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "PROVEEDOR" (
+	"IdProveedor"	INTEGER NOT NULL UNIQUE,
+	"NumeroDocumento"	TEXT NOT NULL,
+	"NombreCompleto"	TEXT NOT NULL,
+	PRIMARY KEY("IdProveedor" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "DATOS" (
+	"IdDato"	INTEGER NOT NULL,
+	"RazonSocial"	TEXT NOT NULL,
+	"Ruc"	TEXT NOT NULL,
+	"Direccion"	TEXT,
+	"Logo"	BLOB,
+	PRIMARY KEY("IdDato")
+);
+CREATE TABLE IF NOT EXISTS "TIPO_BARRA" (
+	"IdTipoBarra"	INTEGER NOT NULL UNIQUE,
+	"Value"	INTEGER NOT NULL,
+	PRIMARY KEY("IdTipoBarra")
+);
+CREATE TABLE IF NOT EXISTS "PERMISOS" (
+	"IdPermisos"	INTEGER NOT NULL,
+	"Descripcion"	TEXT NOT NULL,
+	"Salidas"	INTEGER NOT NULL,
+	"Entradas"	INTEGER NOT NULL,
+	"Productos"	INTEGER NOT NULL,
+	"Clientes"	INTEGER NOT NULL,
+	"Proveedores"	INTEGER NOT NULL,
+	"Inventario"	INTEGER NOT NULL,
+	"Configuracion"	INTEGER NOT NULL,
+	PRIMARY KEY("IdPermisos")
+);
+CREATE TABLE IF NOT EXISTS "USUARIO" (
+	"IdUsuario"	INTEGER NOT NULL UNIQUE,
+	"NombreCompleto"	TEXT NOT NULL,
+	"NombreUsuario"	TEXT NOT NULL,
+	"Clave"	TEXT NOT NULL,
+	"IdPermisos"	INTEGER NOT NULL,
+	PRIMARY KEY("IdUsuario" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "CLIENTE" (
+	"IdCliente"	INTEGER NOT NULL UNIQUE,
+	"NumeroDocumento"	TEXT NOT NULL,
+	"NombreCompleto"	TEXT NOT NULL,
+	PRIMARY KEY("IdCliente" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "ENTRADA" (
+	"IdEntrada"	INTEGER NOT NULL UNIQUE,
+	"NumeroDocumento"	TEXT NOT NULL,
+	"FechaRegistro"	TEXT NOT NULL,
+	"UsuarioRegistro"	TEXT NOT NULL,
+	"DocumentoProveedor"	TEXT NOT NULL,
+	"NombreProveedor"	TEXT NOT NULL,
+	"CantidadProductos"	TEXT NOT NULL,
+	"MontoTotal"	TEXT NOT NULL,
+	PRIMARY KEY("IdEntrada" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "DETALLE_ENTRADA" (
+	"IdDetalleEntrada"	INTEGER NOT NULL UNIQUE,
+	"IdEntrada"	INTEGER NOT NULL,
+	"IdProducto"	INTEGER NOT NULL,
+	"CodigoProducto"	TEXT NOT NULL,
+	"DescripcionProducto"	TEXT NOT NULL,
+	"CategoriaProducto"	TEXT NOT NULL,
+	"AlmacenProducto"	TEXT NOT NULL,
+	"PrecioCompra"	TEXT NOT NULL,
+	"PrecioVenta"	TEXT NOT NULL,
+	"Cantidad"	INTEGER NOT NULL,
+	"SubTotal"	TEXT NOT NULL,
+	FOREIGN KEY("IdEntrada") REFERENCES "ENTRADA"("IdEntrada"),
+	PRIMARY KEY("IdDetalleEntrada" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "SALIDA" (
+	"IdSalida"	INTEGER NOT NULL UNIQUE,
+	"NumeroDocumento"	TEXT NOT NULL,
+	"FechaRegistro"	TEXT NOT NULL,
+	"UsuarioRegistro"	TEXT NOT NULL,
+	"DocumentoCliente"	TEXT NOT NULL,
+	"NombreCliente"	TEXT NOT NULL,
+	"CantidadProductos"	INTEGER NOT NULL,
+	"MontoTotal"	TEXT NOT NULL,
+	PRIMARY KEY("IdSalida" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "DETALLE_SALIDA" (
+	"IdDetalleSalida"	INTEGER NOT NULL UNIQUE,
+	"IdSalida"	INTEGER NOT NULL,
+	"IdProducto"	INTEGER NOT NULL,
+	"CodigoProducto"	TEXT NOT NULL,
+	"DescripcionProducto"	TEXT NOT NULL,
+	"CategoriaProducto"	TEXT NOT NULL,
+	"AlmacenProducto"	TEXT NOT NULL,
+	"PrecioVenta"	TEXT NOT NULL,
+	"Cantidad"	INTEGER NOT NULL,
+	"SubTotal"	TEXT NOT NULL,
+	FOREIGN KEY("IdSalida") REFERENCES "SALIDA"("IdSalida"),
+	PRIMARY KEY("IdDetalleSalida" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "PRODUCTO" (
+	"IdProducto"	INTEGER NOT NULL UNIQUE,
+	"Codigo"	TEXT NOT NULL,
+	"Descripcion"	TEXT NOT NULL,
+	"Categoria"	TEXT DEFAULT '',
+	"Almacen"	TEXT DEFAULT '',
+	"PrecioCompra"	TEXT NOT NULL DEFAULT '',
+	"PrecioVenta"	TEXT NOT NULL DEFAULT '',
+	"Stock"	INTEGER NOT NULL DEFAULT 0,
+	PRIMARY KEY("IdProducto" AUTOINCREMENT)
+);
+COMMIT;
